@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pizza Nuova - Delivery en Línea</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PapaParse para Google Sheets -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header Principal -->
+        <header class="main-header">
+            <div class="logo-container">
+                <h1 class="logo-title">Pizza <span>Nuova</span></h1>
+                <p class="logo-subtitle">Deleite en cada porción</p>
+            </div>
+            <div class="cart-btn" id="cart-trigger">
+                <div class="cart-icon-wrapper">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                    <span id="cart-badge" class="badge">0</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Banner de Local Cerrado -->
+        <div id="closed-banner" class="status-banner hidden">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span id="closed-message">Actualmente estamos cerrados.</span>
+        </div>
+
+        <!-- Layout Central -->
+        <main class="main-content">
+            <!-- Navegación de Categorías Horizontal -->
+            <nav class="categories-nav">
+                <ul id="categories-list">
+                    <!-- Dinámico -->
+                </ul>
+            </nav>
+
+            <!-- Menú de Productos -->
+            <section class="menu-section">
+                <h2 id="current-category-title" class="category-title">Cargando menú...</h2>
+                <div id="products-grid" class="products-grid">
+                    <!-- Dinámico -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Spinner de Carga -->
+        <div id="loading-spinner" class="loading-overlay">
+            <div class="spinner"></div>
+            <p>Cargando sabores...</p>
+        </div>
+
+        <!-- Offcanvas / Modal de Carrito -->
+        <div id="cart-sidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h2>Tu Pedido</h2>
+                <button id="close-cart" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div id="cart-items" class="cart-items-container">
+                <!-- Dinámico -->
+                <div class="empty-cart-msg">
+                    <i class="fa-solid fa-pizza-slice"></i>
+                    <p>Tu carrito está vacío</p>
+                </div>
+            </div>
+
+            <div class="cart-footer">
+                <div class="cart-summary">
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="cart-total-price">$0</span>
+                    </div>
+                </div>
+                
+                <div class="payment-method-group">
+                    <label for="payment-select">Método de pago:</label>
+                    <div class="select-wrapper">
+                        <select id="payment-select">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+
+                <p id="closed-checkout-msg" class="closed-warning hidden">No puedes finalizar pedidos cuando el local está cerrado.</p>
+                <button id="checkout-btn" class="checkout-submit-btn" disabled>
+                    Finalizar Pedido <i class="fa-brands fa-whatsapp"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Overlay oscuro para el carrito -->
+        <div id="cart-overlay" class="overlay hidden"></div>
+    </div>
+
+    <!-- Script de lógica -->
+    <script src="js/app.js" defer></script>
+</body>
+</html>
