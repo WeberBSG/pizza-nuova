@@ -746,6 +746,34 @@ body {
     animation: spin 1s linear infinite;
 }
 
+/* FOOTER MINIMALISTA */
+.minimal-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.minimal-footer p {
+    font-size: 0.9rem;
+    color: var(--clr-gray);
+    font-weight: 400;
+}
+
+.dev-link {
+    color: var(--clr-dark);
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.3s ease;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.dev-link:hover {
+    color: var(--clr-primary);
+    background-color: var(--clr-dark);
+}
+
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
