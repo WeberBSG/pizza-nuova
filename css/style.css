@@ -661,6 +661,23 @@ body {
     margin-bottom: 10px;
 }
 
+/* INFO TRANSFERENCIA */
+.transfer-info {
+    background-color: #f1f8ff;
+    border: 1px solid #cce5ff;
+    padding: 10px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    color: var(--clr-dark);
+    text-align: center;
+}
+.transfer-info .small {
+    font-size: 0.8rem;
+    color: var(--clr-gray);
+    margin-top: 4px;
+}
+
 /* OVERLAY */
 .overlay {
     position: fixed;

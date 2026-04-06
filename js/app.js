@@ -517,6 +517,28 @@ function setupUIEvents() {
     if (closeCart) closeCart.onclick = hideCart;
     if (overlay) overlay.onclick = hideCart;
     if (checkoutBtn) checkoutBtn.onclick = generateWhatsAppOrder;
+
+    // Escuchar cambio en método de pago
+    const paymentSelect = document.getElementById('payment-select');
+    if (paymentSelect) {
+        paymentSelect.addEventListener('change', updatePaymentUI);
+    }
+}
+
+function updatePaymentUI() {
+    const paymentSelect = document.getElementById('payment-select');
+    const infoBox = document.getElementById('transfer-info');
+    const aliasSpan = document.getElementById('transfer-alias');
+
+    if (!paymentSelect || !infoBox || !aliasSpan) return;
+
+    if (paymentSelect.value === 'Transferencia') {
+        const alias = state.config['alias_transferencia'] || 'No configurado';
+        aliasSpan.textContent = alias;
+        infoBox.classList.remove('hidden');
+    } else {
+        infoBox.classList.add('hidden');
+    }
 }
 
 window.appContext = {
