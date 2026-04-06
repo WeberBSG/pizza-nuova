@@ -553,12 +553,17 @@ function updatePaymentUI() {
     const paymentSelect = document.getElementById('payment-select');
     const infoBox = document.getElementById('transfer-info');
     const aliasSpan = document.getElementById('transfer-alias');
+    const cbuSpan = document.getElementById('transfer-cbu');
 
-    if (!paymentSelect || !infoBox || !aliasSpan) return;
+    if (!paymentSelect || !infoBox || !aliasSpan || !cbuSpan) return;
 
     if (paymentSelect.value === 'Transferencia') {
         const alias = state.config['alias_transferencia'] || 'No configurado';
+        const cbu = state.config['cbu_transferencia'] || 'No configurado';
+        
         aliasSpan.textContent = alias;
+        cbuSpan.textContent = cbu;
+        
         infoBox.classList.remove('hidden');
     } else {
         infoBox.classList.add('hidden');
