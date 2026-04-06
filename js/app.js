@@ -23,6 +23,24 @@ const formatPrice = (price) => {
     }).format(price);
 };
 
+// Conversor de Google Drive a link directo para imagen
+const getDirectImageUrl = (url) => {
+    if (!url || typeof url !== 'string') return '';
+    
+    // Detectar enlaces de Google Drive (varios formatos)
+    const driveRegex = /\/file\/d\/([^\/]+)\/|\/d\/([^\/&?]+)|id=([^\/&?]+)/;
+    const match = url.match(driveRegex);
+    
+    if (url.includes('drive.google.com') && match) {
+        const fileId = match[1] || match[2] || match[3];
+        // Retornar formato de imagen directa rápido y confiable
+        return `https://lh3.googleusercontent.com/u/0/d/${fileId}`;
+    }
+    
+    // Si no es Google Drive, retornar el link original tal cual
+    return url;
+};
+
 // --- 3. INICIALIZACIÓN ---
 async function init() {
     try {
@@ -178,7 +196,7 @@ async function loadMenu() {
                 descripcion: (row.Descripción || row.Descripcion || Object.values(row)[2] || '').trim(),
                 precio1: p1Val ? parseFloat(String(p1Val).replace(/\D/g, '')) : null,
                 precio2: p2Val ? parseFloat(String(p2Val).replace(/\D/g, '')) : null,
-                imagen: row.Imagen || row.imagen || row.Link_Imagen || row.link_imagen || row['Link Imagen'] || ''
+                imagen: getDirectImageUrl(row.Imagen || row.imagen || row.Link_Imagen || row.link_imagen || row['Link Imagen'] || '')
             };
         }).filter(p => {
             if (p.precio1 === null || isNaN(p.precio1)) {
