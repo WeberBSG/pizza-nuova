@@ -131,7 +131,16 @@ function checkLocalStatus() {
     };
     const openTime = parseTime(state.config['hora_apertura']);
     const closeTime = parseTime(state.config['hora_cierre']);
-    const isTimeOpen = currentTime >= openTime && currentTime <= closeTime;
+
+    let isTimeOpen;
+    if (closeTime < openTime) {
+        // Caso trasnochada (ej: Abre 20:00, Cierra 03:00)
+        // Está abierto si es más tarde que la apertura O más temprano que el cierre
+        isTimeOpen = currentTime >= openTime || currentTime <= closeTime;
+    } else {
+        // Caso normal (ej: Abre 09:00, Cierra 18:00)
+        isTimeOpen = currentTime >= openTime && currentTime <= closeTime;
+    }
 
     // 3. Check Manual Override (estado_local: "Abierto/Cerrado")
     const manualStatus = state.config['estado_local'] || 'Abierto';
