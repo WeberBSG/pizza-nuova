@@ -178,6 +178,7 @@ async function loadMenu() {
                 descripcion: (row.Descripción || row.Descripcion || Object.values(row)[2] || '').trim(),
                 precio1: p1Val ? parseFloat(String(p1Val).replace(/\D/g, '')) : null,
                 precio2: p2Val ? parseFloat(String(p2Val).replace(/\D/g, '')) : null,
+                imagen: row.Imagen || row.imagen || row.Link_Imagen || row.link_imagen || row['Link Imagen'] || ''
             };
         }).filter(p => {
             if (p.precio1 === null || isNaN(p.precio1)) {
@@ -306,6 +307,11 @@ function selectCategory(category) {
         }
 
         card.innerHTML = `
+            ${p.imagen ? `
+                <div class="product-img-container">
+                    <img src="${p.imagen}" alt="${p.nombre}" class="product-img" loading="lazy">
+                </div>
+            ` : ''}
             <div class="product-name">${p.nombre}</div>
             <div class="product-desc">${p.descripcion}</div>
             <div class="prices-container">

@@ -280,6 +280,26 @@ body {
     box-shadow: var(--shadow-strong);
 }
 
+.product-img-container {
+    width: calc(100% + 3rem);
+    height: 180px;
+    margin: -1.5rem -1.5rem 1.25rem -1.5rem;
+    overflow: hidden;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    background-color: var(--clr-gray-light);
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.08);
+}
+
 .product-name {
     font-size: 1.25rem;
     font-weight: 800;
