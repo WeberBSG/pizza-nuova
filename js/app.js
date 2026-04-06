@@ -512,6 +512,11 @@ function generateWhatsAppOrder() {
     if (shippingCost > 0) text += `*Envío:* $${shippingCost.toLocaleString('es-AR')}\n`;
     text += `*Total a pagar: $${(subtotal + shippingCost).toLocaleString('es-AR')}*\n\n`;
     text += `*Método de pago:* ${paymentMethod}\n\n`;
+    
+    if (paymentMethod === 'Transferencia') {
+        text += `⚠️ *Recordatorio:* Ya realicé/estoy realizando la transferencia. En breve envío el comprobante de pago por este medio.\n\n`;
+    }
+    
     text += `Por favor, confirmar recepción del pedido. ¡Muchas gracias!`;
 
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
