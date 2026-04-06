@@ -35,6 +35,11 @@
             <span id="closed-message">Actualmente estamos cerrados.</span>
         </div>
 
+        <!-- Banner de Bienvenida -->
+        <div id="welcome-section" class="welcome-banner hidden">
+            <p id="welcome-message"></p>
+        </div>
+
         <!-- Layout Central -->
         <main class="main-content">
             <!-- Navegación de Categorías Horizontal -->
@@ -76,6 +81,14 @@
 
             <div class="cart-footer">
                 <div class="cart-summary">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span id="cart-subtotal">$0</span>
+                    </div>
+                    <div id="shipping-row" class="summary-row">
+                        <span>Envío</span>
+                        <span id="cart-shipping">$0</span>
+                    </div>
                     <div class="summary-row total">
                         <span>Total</span>
                         <span id="cart-total-price">$0</span>

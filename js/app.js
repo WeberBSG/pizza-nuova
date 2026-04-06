@@ -104,12 +104,44 @@ async function loadConfig() {
             }
         });
 
-        const estado = state.config['estado_local'];
-        state.isLocalClosed = estado && estado.toLowerCase().includes('cerrado');
+        checkLocalStatus();
     } catch (e) {
         console.error("Error al cargar config", e);
         throw new Error("No pudimos conectar con la configuración de Google Sheets.");
     }
+}
+
+function checkLocalStatus() {
+    const now = new Date();
+    const day = now.getDay(); // 0=Sun, 1=Mon... 6=Sat
+    const hour = now.getHours();
+    const minutes = now.getMinutes();
+    const currentTime = hour * 60 + minutes;
+
+    // 1. Check Day (dias_abiertos: "1,2,3,4,5,6")
+    const openDaysStr = state.config['dias_abiertos'] || '0,1,2,3,4,5,6';
+    const openDays = openDaysStr.split(',').map(d => parseInt(d.trim()));
+    const isDayOpen = openDays.includes(day);
+
+    // 2. Check Time (hora_apertura: "9:00", hora_cierre: "23:30")
+    const parseTime = (tStr) => {
+        if (!tStr) return 0;
+        const [h, m] = tStr.split(':').map(n => parseInt(n));
+        return h * 60 + (m || 0);
+    };
+    const openTime = parseTime(state.config['hora_apertura']);
+    const closeTime = parseTime(state.config['hora_cierre']);
+    const isTimeOpen = currentTime >= openTime && currentTime <= closeTime;
+
+    // 3. Check Manual Override (estado_local: "Abierto/Cerrado")
+    const manualStatus = state.config['estado_local'] || 'Abierto';
+    const isManualClosed = manualStatus.toLowerCase().includes('cerrado');
+
+    // Combine logic: Must be day open AND time open AND not manually closed
+    state.isLocalClosed = !isDayOpen || !isTimeOpen || isManualClosed;
+    
+    // Debug info for console
+    console.log(`Estado: ${state.isLocalClosed ? 'CERRADO' : 'ABIERTO'} (DayOk: ${isDayOpen}, TimeOk: ${isTimeOpen}, ManualClosed: ${isManualClosed})`);
 }
 
 async function loadMenu() {
@@ -164,11 +196,22 @@ async function loadMenu() {
 function renderConfigInfo() {
     const banner = document.getElementById('closed-banner');
     const msg = document.getElementById('closed-message');
+    const welcomeSection = document.getElementById('welcome-section');
+    const welcomeMsg = document.getElementById('welcome-message');
     const checkoutMsg = document.getElementById('closed-checkout-msg');
     const btn = document.getElementById('checkout-btn');
 
+    // Bienvenida
+    const welcomeText = state.config['mensaje_bienvenida'];
+    if (welcomeText && welcomeSection && welcomeMsg) {
+        welcomeMsg.textContent = welcomeText;
+        welcomeSection.classList.remove('hidden');
+    } else if (welcomeSection) {
+        welcomeSection.classList.add('hidden');
+    }
+
     if (state.isLocalClosed) {
-        if (msg) msg.textContent = state.config['mensaje_cierre'] || 'El local se encuentra cerrado.';
+        if (msg) msg.textContent = state.config['mensaje_cierre'] || 'Actualmente estamos cerrados. Revisá nuestros horarios.';
         if (banner) banner.classList.remove('hidden');
         if (checkoutMsg) checkoutMsg.classList.remove('hidden');
         if (btn) btn.disabled = true;
@@ -338,13 +381,15 @@ function renderCart() {
     const container = document.getElementById('cart-items');
     const badge = document.getElementById('cart-badge');
     const totalEl = document.getElementById('cart-total-price');
+    const subtotalEl = document.getElementById('cart-subtotal');
+    const shippingEl = document.getElementById('cart-shipping');
     const checkoutBtn = document.getElementById('checkout-btn');
 
     if (!container) return;
     container.innerHTML = '';
 
     let totalItems = 0;
-    let totalPrice = 0;
+    let subtotalPrice = 0;
 
     if (state.cart.length === 0) {
         container.innerHTML = `
@@ -359,7 +404,7 @@ function renderCart() {
 
         state.cart.forEach(item => {
             totalItems += item.qty;
-            totalPrice += (item.precio * item.qty);
+            subtotalPrice += (item.precio * item.qty);
 
             const div = document.createElement('div');
             div.className = 'cart-item';
@@ -387,8 +432,13 @@ function renderCart() {
         });
     }
 
+    const shippingCost = parseFloat(state.config['costo_envio']) || 0;
+    const finalTotal = subtotalPrice > 0 ? (subtotalPrice + shippingCost) : 0;
+
     if (badge) badge.textContent = totalItems;
-    if (totalEl) totalEl.textContent = formatPrice(totalPrice);
+    if (subtotalEl) subtotalEl.textContent = formatPrice(subtotalPrice);
+    if (shippingEl) shippingEl.textContent = formatPrice(shippingCost);
+    if (totalEl) totalEl.textContent = formatPrice(finalTotal);
 }
 
 function saveCart() {
@@ -412,19 +462,22 @@ function generateWhatsAppOrder() {
     const phone = state.config['telefono_whatsapp'] || '5493816197337';
     const paymentSelect = document.getElementById('payment-select');
     const paymentMethod = paymentSelect ? paymentSelect.value : 'No especificado';
+    const shippingCost = parseFloat(state.config['costo_envio']) || 0;
 
     let text = `*Hola Pizza Nuova, quiero hacer el siguiente pedido:*\n\n`;
 
-    let total = 0;
+    let subtotal = 0;
     state.cart.forEach(item => {
-        let subtotal = item.qty * item.precio;
-        total += subtotal;
+        let itemSub = item.qty * item.precio;
+        subtotal += itemSub;
         let varText = item.variante !== 'Único' ? ` (${item.variante})` : '';
-        text += `- *${item.qty}x ${item.nombre}${varText}* - $${subtotal.toLocaleString('es-AR')}\n`;
+        text += `- *${item.qty}x ${item.nombre}${varText}* - $${itemSub.toLocaleString('es-AR')}\n`;
         if (item.notas.trim()) text += `   📌 _Nota: ${item.notas.trim()}_\n`;
     });
 
-    text += `\n*Total a pagar: $${total.toLocaleString('es-AR')}*\n`;
+    text += `\n*Subtotal:* $${subtotal.toLocaleString('es-AR')}\n`;
+    if (shippingCost > 0) text += `*Envío:* $${shippingCost.toLocaleString('es-AR')}\n`;
+    text += `*Total a pagar: $${(subtotal + shippingCost).toLocaleString('es-AR')}*\n\n`;
     text += `*Método de pago:* ${paymentMethod}\n\n`;
     text += `Por favor, confirmar recepción del pedido. ¡Muchas gracias!`;
 
