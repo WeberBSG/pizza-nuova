@@ -520,6 +520,20 @@ function generateWhatsAppOrder() {
     text += `Por favor, confirmar recepción del pedido. ¡Muchas gracias!`;
 
     const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+
+    if (paymentMethod === 'Transferencia') {
+        const modal = document.getElementById('transfer-confirm-modal');
+        const confirmBtn = document.getElementById('modal-confirm-btn');
+        if (modal && confirmBtn) {
+            modal.classList.remove('hidden');
+            confirmBtn.onclick = () => {
+                modal.classList.add('hidden');
+                window.open(url, '_blank');
+            };
+            return;
+        }
+    }
+
     window.open(url, '_blank');
 }
 
@@ -551,6 +565,13 @@ function setupUIEvents() {
     const paymentSelect = document.getElementById('payment-select');
     if (paymentSelect) {
         paymentSelect.addEventListener('change', updatePaymentUI);
+    }
+
+    // Modal Events
+    const modal = document.getElementById('transfer-confirm-modal');
+    const cancelBtn = document.getElementById('modal-cancel-btn');
+    if (modal && cancelBtn) {
+        cancelBtn.onclick = () => modal.classList.add('hidden');
     }
 }
 

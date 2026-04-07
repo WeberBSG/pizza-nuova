@@ -125,6 +125,19 @@
         
         <!-- Overlay oscuro para el carrito -->
         <div id="cart-overlay" class="overlay hidden"></div>
+
+        <!-- Modal de Confirmación de Transferencia -->
+        <div id="transfer-confirm-modal" class="modal-overlay hidden">
+            <div class="modal-content">
+                <div class="modal-icon"><i class="fa-solid fa-money-bill-transfer"></i></div>
+                <h3>¡Casi listo! 🍕</h3>
+                <p>Para procesar tu pedido, recuerda realizar la transferencia y <strong>enviar el comprobante de pago</strong> por WhatsApp a continuación.</p>
+                <div class="modal-buttons">
+                    <button id="modal-cancel-btn" class="modal-btn secondary">Volver</button>
+                    <button id="modal-confirm-btn" class="modal-btn primary">Entendido, continuar <i class="fa-brands fa-whatsapp"></i></button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Script de lógica -->
