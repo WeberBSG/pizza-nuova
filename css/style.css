@@ -902,13 +902,15 @@ body {
 }
 
 .modal-btn.primary {
-    background-color: #25D366;
-    color: white;
-    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+    background-color: var(--clr-dark);
+    color: var(--clr-primary);
+    box-shadow: var(--shadow-strong);
+    border: 1px solid transparent;
 }
 
 .modal-btn.primary:hover {
-    background-color: #1ebe57;
+    background-color: var(--clr-primary);
+    color: var(--clr-dark);
     transform: translateY(-2px);
 }
 
@@ -920,6 +922,61 @@ body {
 .modal-btn.secondary:hover {
     background-color: var(--clr-gray);
     color: white;
+}
+
+/* MODAL DE DATOS DEL CLIENTE */
+.customer-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.customer-form-group label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--clr-dark);
+}
+
+.customer-form-group input {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: var(--radius-sm);
+    background-color: #fafafa;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--clr-dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.customer-form-group input:focus {
+    outline: none;
+    border-color: var(--clr-primary);
+    box-shadow: 0 0 0 3px rgba(255, 176, 0, 0.15);
+    background-color: var(--clr-white);
+}
+
+.customer-modal-btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+    background-color: var(--clr-dark);
+    color: var(--clr-primary);
+    box-shadow: var(--shadow-strong);
+    margin-top: 10px;
+}
+
+.customer-modal-btn:hover {
+    background-color: var(--clr-primary);
+    color: var(--clr-dark);
+    transform: translateY(-2px);
 }
 
 @keyframes spin {

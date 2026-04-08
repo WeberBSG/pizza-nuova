@@ -146,26 +146,24 @@
         <!-- Modal de Datos del Cliente (Onboarding) -->
         <div id="customer-modal" class="modal-overlay hidden">
             <div class="modal-content">
-                <div class="modal-icon"><i class="fa-solid fa-user-pizza"></i></div>
+                <div class="modal-icon"><i class="fa-solid fa-utensils"></i></div>
                 <h3>¡Bienvenido a Pizza Nuova!</h3>
                 <p>Para comenzar tu pedido, por favor ingresa tus datos de entrega:</p>
-                <div class="customer-info-form" style="background: transparent; border: none; padding: 0; margin-bottom: 1.5rem; text-align: left;">
-                    <div class="form-group">
+                <div class="customer-form-container">
+                    <div class="customer-form-group">
                         <label for="modal-customer-name">Nombre completo</label>
                         <input type="text" id="modal-customer-name" placeholder="Ej: Juan Perez" required>
                     </div>
-                    <div class="form-group">
+                    <div class="customer-form-group">
                         <label for="modal-customer-address">Dirección de entrega</label>
                         <input type="text" id="modal-customer-address" placeholder="Ej: Calle Falsa 123" required>
                     </div>
-                    <div class="form-group">
+                    <div class="customer-form-group">
                         <label for="modal-customer-phone">Teléfono / WhatsApp</label>
                         <input type="tel" id="modal-customer-phone" placeholder="Ej: 381-1234567" required>
                     </div>
                 </div>
-                <div class="modal-buttons">
-                    <button id="modal-customer-save-btn" class="modal-btn primary">Guardar y Continuar</button>
-                </div>
+                <button id="modal-customer-save-btn" class="customer-modal-btn">Guardar y Continuar</button>
             </div>
         </div>
     </div>
