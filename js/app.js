@@ -65,6 +65,7 @@ async function init() {
 
         setupUIEvents();
         loadCartFromStorage();
+        checkCustomerOnboarding();
 
     } catch (error) {
         console.error("Falla crítica en la inicialización:", error);
@@ -480,13 +481,60 @@ function renderCart() {
 }
 
 function renderCustomerForm() {
-    const nameInput = document.getElementById('customer-name');
-    const addressInput = document.getElementById('customer-address');
-    const phoneInput = document.getElementById('customer-phone');
+    const nameInput = document.getElementById('modal-customer-name');
+    const addressInput = document.getElementById('modal-customer-address');
+    const phoneInput = document.getElementById('modal-customer-phone');
 
     if (nameInput) nameInput.value = state.customer.name;
     if (addressInput) addressInput.value = state.customer.address;
     if (phoneInput) phoneInput.value = state.customer.phone;
+}
+
+function checkCustomerOnboarding() {
+    if (!state.customer.name || !state.customer.address || !state.customer.phone) {
+        const modal = document.getElementById('customer-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+}
+
+function openCustomerModal() {
+    const modal = document.getElementById('customer-modal');
+    if (modal) {
+        renderCustomerForm();
+        modal.classList.remove('hidden');
+    }
+}
+
+function closeCustomerModal() {
+    const modal = document.getElementById('customer-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        if (!document.getElementById('cart-sidebar').classList.contains('open')) {
+            document.body.style.overflow = '';
+        }
+    }
+}
+
+function saveCustomerFromModal() {
+    const nameInput = document.getElementById('modal-customer-name');
+    const addressInput = document.getElementById('modal-customer-address');
+    const phoneInput = document.getElementById('modal-customer-phone');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    const address = addressInput ? addressInput.value.trim() : '';
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+
+    if (!name || !address || !phone) {
+        alert('Por favor, completa todos los campos para continuar.');
+        return;
+    }
+
+    state.customer = { name, address, phone };
+    saveCart();
+    closeCustomerModal();
 }
 
 function saveCart() {
@@ -516,9 +564,7 @@ function generateWhatsAppOrder() {
     if (state.cart.length === 0 || state.isLocalClosed) return;
 
     if (!state.customer.name || !state.customer.address || !state.customer.phone) {
-        alert('Por favor, completa tu nombre, dirección y teléfono para continuar.');
-        const nameInput = document.getElementById('customer-name');
-        if (nameInput && !state.customer.name) nameInput.focus();
+        openCustomerModal();
         return;
     }
 
@@ -601,27 +647,24 @@ function setupUIEvents() {
         paymentSelect.addEventListener('change', updatePaymentUI);
     }
 
-    // Customer form inputs
-    const nameInput = document.getElementById('customer-name');
-    const addressInput = document.getElementById('customer-address');
-    const phoneInput = document.getElementById('customer-phone');
+    const editCustomerBtn = document.getElementById('edit-customer-data-btn');
+    if (editCustomerBtn) {
+        editCustomerBtn.addEventListener('click', openCustomerModal);
+    }
 
-    if (nameInput) {
-        nameInput.addEventListener('input', () => {
-            state.customer.name = nameInput.value.trim();
-            saveCart();
-        });
+    const customerModalSaveBtn = document.getElementById('modal-customer-save-btn');
+    if (customerModalSaveBtn) {
+        customerModalSaveBtn.addEventListener('click', saveCustomerFromModal);
     }
-    if (addressInput) {
-        addressInput.addEventListener('input', () => {
-            state.customer.address = addressInput.value.trim();
-            saveCart();
-        });
-    }
-    if (phoneInput) {
-        phoneInput.addEventListener('input', () => {
-            state.customer.phone = phoneInput.value.trim();
-            saveCart();
+
+    const customerModal = document.getElementById('customer-modal');
+    if (customerModal) {
+        customerModal.addEventListener('click', (e) => {
+            if (e.target === customerModal) {
+                if (state.customer.name && state.customer.address && state.customer.phone) {
+                    closeCustomerModal();
+                }
+            }
         });
     }
 

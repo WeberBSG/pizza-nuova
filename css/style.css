@@ -690,58 +690,32 @@ body {
     transform: none;
 }
 
-.customer-info-form {
-    margin-bottom: 1.25rem;
-    background: var(--clr-light);
-    padding: 1rem;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--clr-gray-light);
-}
-
-.customer-info-form h3 {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--clr-dark);
-    margin-bottom: 1rem;
-    border-bottom: 2px solid var(--clr-primary);
-    padding-bottom: 0.5rem;
-}
-
-.customer-info-form .form-group {
-    margin-bottom: 0.75rem;
-}
-
-.customer-info-form .form-group:last-child {
-    margin-bottom: 0;
-}
-
-.customer-info-form label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--clr-gray);
-    margin-bottom: 4px;
-}
-
-.customer-info-form input {
+.edit-data-btn {
     width: 100%;
-    padding: 10px 12px;
+    background: transparent;
     border: 1px solid var(--clr-gray-light);
+    color: var(--clr-gray);
+    padding: 8px 12px;
     border-radius: var(--radius-sm);
     font-family: inherit;
-    font-size: 0.95rem;
-    background: var(--clr-white);
-    transition: border-color 0.2s, box-shadow 0.2s;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
 }
 
-.customer-info-form input:focus {
-    outline: none;
+.edit-data-btn:hover {
+    background: var(--clr-light);
+    color: var(--clr-dark);
     border-color: var(--clr-primary);
-    box-shadow: 0 0 0 3px rgba(255, 176, 0, 0.15);
 }
 
-.customer-info-form input::placeholder {
-    color: #bbb;
+.edit-data-btn i {
+    font-size: 0.9rem;
 }
 
 .closed-warning {
