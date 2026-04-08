@@ -12,7 +12,12 @@ const state = {
     config: {},
     cart: [],
     currentCategory: null,
-    isLocalClosed: false
+    isLocalClosed: false,
+    customer: {
+        name: '',
+        address: '',
+        phone: ''
+    }
 };
 
 const formatPrice = (price) => {
@@ -474,8 +479,19 @@ function renderCart() {
     if (totalEl) totalEl.textContent = formatPrice(finalTotal);
 }
 
+function renderCustomerForm() {
+    const nameInput = document.getElementById('customer-name');
+    const addressInput = document.getElementById('customer-address');
+    const phoneInput = document.getElementById('customer-phone');
+
+    if (nameInput) nameInput.value = state.customer.name;
+    if (addressInput) addressInput.value = state.customer.address;
+    if (phoneInput) phoneInput.value = state.customer.phone;
+}
+
 function saveCart() {
     localStorage.setItem('pizzaNuovaCart', JSON.stringify(state.cart));
+    localStorage.setItem('pizzaNuovaCustomer', JSON.stringify(state.customer));
 }
 
 function loadCartFromStorage() {
@@ -486,11 +502,25 @@ function loadCartFromStorage() {
             renderCart();
         } catch (e) { }
     }
+    const savedCustomer = localStorage.getItem('pizzaNuovaCustomer');
+    if (savedCustomer) {
+        try {
+            state.customer = JSON.parse(savedCustomer);
+            renderCustomerForm();
+        } catch (e) { }
+    }
 }
 
 // --- 7. CHECKOUT Y WHATSAPP ---
 function generateWhatsAppOrder() {
     if (state.cart.length === 0 || state.isLocalClosed) return;
+
+    if (!state.customer.name || !state.customer.address || !state.customer.phone) {
+        alert('Por favor, completa tu nombre, dirección y teléfono para continuar.');
+        const nameInput = document.getElementById('customer-name');
+        if (nameInput && !state.customer.name) nameInput.focus();
+        return;
+    }
 
     const phone = state.config['telefono_whatsapp'] || '5493816197337';
     const paymentSelect = document.getElementById('payment-select');
@@ -498,6 +528,10 @@ function generateWhatsAppOrder() {
     const shippingCost = parseFloat(state.config['costo_envio']) || 0;
 
     let text = `*Hola Pizza Nuova, quiero hacer el siguiente pedido:*\n\n`;
+    text += `*Datos del cliente:*\n`;
+    text += `- *Nombre:* ${state.customer.name}\n`;
+    text += `- *Dirección:* ${state.customer.address}\n`;
+    text += `- *Teléfono:* ${state.customer.phone}\n\n`;
 
     let subtotal = 0;
     state.cart.forEach(item => {
@@ -565,6 +599,30 @@ function setupUIEvents() {
     const paymentSelect = document.getElementById('payment-select');
     if (paymentSelect) {
         paymentSelect.addEventListener('change', updatePaymentUI);
+    }
+
+    // Customer form inputs
+    const nameInput = document.getElementById('customer-name');
+    const addressInput = document.getElementById('customer-address');
+    const phoneInput = document.getElementById('customer-phone');
+
+    if (nameInput) {
+        nameInput.addEventListener('input', () => {
+            state.customer.name = nameInput.value.trim();
+            saveCart();
+        });
+    }
+    if (addressInput) {
+        addressInput.addEventListener('input', () => {
+            state.customer.address = addressInput.value.trim();
+            saveCart();
+        });
+    }
+    if (phoneInput) {
+        phoneInput.addEventListener('input', () => {
+            state.customer.phone = phoneInput.value.trim();
+            saveCart();
+        });
     }
 
     // Modal Events
